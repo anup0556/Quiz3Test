@@ -2,6 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Question, QuestionAttempt
+from django.db.models import Count, F, Q, FloatField, Avg, Max  # Added Max here
+from django.db.models.functions import Cast
+from django.core.cache import cache
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 class QuestionList(APIView):
     def get(self, request):
@@ -75,10 +80,31 @@ class SubmitAnswer(APIView):
 
 class Leaderboard(APIView):
     def get(self, request):
-        return Response({
-            "status": "success",
-            "leaderboard": []
-        })
+        try:
+            leaderboard_data = QuestionAttempt.objects.values(
+                'user_ip'
+            ).annotate(
+                total_attempts=Count('id'),
+                correct_answers=Count('id', filter=Q(is_correct=True)),
+                accuracy=Cast(F('correct_answers') * 100.0 / F('total_attempts'), FloatField()),
+                score=F('correct_answers') * 10,
+                last_attempt=Max('attempted_at')
+            ).order_by(
+                '-score',           # First by total score
+                '-accuracy',        # Then by accuracy percentage
+                'total_attempts',   # Then by fewer attempts (more efficient)
+                'last_attempt'      # Finally by who completed first
+            )[:10]
+
+            return Response({
+                "status": "success",
+                "leaderboard": list(leaderboard_data)
+            })
+        except Exception as e:
+            return Response({
+                "status": "error",
+                "message": str(e)
+            }, status=500)
 
 class QuestionDetail(APIView):
     def get(self, request, pk):
