@@ -11,11 +11,7 @@ REST_FRAMEWORK = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
-        'OPTIONS': {
-            'MAX_ENTRIES': 50000
-        }
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
@@ -28,11 +24,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'channels',  # Add this
     'questions',
     'users',
     'leaderboard',
     'answers.apps.AnswersConfig',  # Make sure this exact line is used
 ]
+
+# Add WebSocket Configuration
+ASGI_APPLICATION = 'Quiz2.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 
 USE_TZ = True
