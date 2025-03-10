@@ -10,10 +10,14 @@ class Question(models.Model):
 
 class QuestionAttempt(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user_ip = models.CharField(max_length=45)
+    user_ip = models.CharField(max_length=45, db_index=True)
     selected_answer = models.CharField(max_length=200)
-    is_correct = models.BooleanField()
-    attempted_at = models.DateTimeField(auto_now_add=True)
+    is_correct = models.BooleanField(db_index=True)
+    attempted_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
+        indexes = [
+            models.Index(fields=['user_ip', 'is_correct']),
+            models.Index(fields=['-attempted_at']),
+        ]
         unique_together = ['question', 'user_ip']

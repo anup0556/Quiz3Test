@@ -7,6 +7,8 @@ from django.db.models.functions import Cast
 from django.core.cache import cache
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 class QuestionList(APIView):
     def get(self, request):
@@ -51,6 +53,20 @@ class SubmitAnswer(APIView):
                 user_ip=user_ip,
                 selected_answer=selected_answer,
                 is_correct=is_correct
+            )
+
+            # After saving the attempt, broadcast the update
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "quiz_room",
+                {
+                    "type": "quiz_update",
+                    "message": {
+                        "type": "answer_submitted",
+                        "user_ip": user_ip,
+                        "is_correct": is_correct
+                    }
+                }
             )
 
             return Response({
