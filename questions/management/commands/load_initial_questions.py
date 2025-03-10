@@ -2,67 +2,81 @@ from django.core.management.base import BaseCommand
 from questions.models import Question
 
 class Command(BaseCommand):
-    help = 'Loads initial programming questions'
+    help = 'Loads initial GK questions'
 
     def handle(self, *args, **kwargs):
         questions_data = [
             {
-                "question_text": "What is the primary purpose of the 'self' parameter in Python class methods?",
-                "options": ["To create a new instance", "To reference the current instance", "To define class variables", "To import modules"],
-                "correct_answer": "To reference the current instance"
+                "id": 1,
+                "question_text": "Which is the largest planet in our solar system?",
+                "options": ["Mars", "Jupiter", "Saturn", "Neptune"],
+                "correct_answer": "Jupiter"
             },
             {
-                "question_text": "Which data structure in Python uses LIFO (Last In, First Out)?",
-                "options": ["Queue", "Stack", "List", "Dictionary"],
-                "correct_answer": "Stack"
+                "id": 2,
+                "question_text": "What is the capital of France?",
+                "options": ["London", "Berlin", "Paris", "Madrid"],
+                "correct_answer": "Paris"
             },
             {
-                "question_text": "What is the output of print(type(1/2)) in Python 3?",
-                "options": ["<class 'int'>", "<class 'float'>", "<class 'number'>", "<class 'decimal'>"],
-                "correct_answer": "<class 'float'>"
+                "id": 3,
+                "question_text": "Who wrote 'Romeo and Juliet'?",
+                "options": ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+                "correct_answer": "William Shakespeare"
             },
             {
-                "question_text": "Which of these is NOT a valid variable name in Python?",
-                "options": ["my_var", "_variable", "2variable", "variable2"],
-                "correct_answer": "2variable"
+                "id": 4,
+                "question_text": "What is the chemical symbol for Gold?",
+                "options": ["Au", "Ag", "Fe", "Cu"],
+                "correct_answer": "Au"
             },
             {
-                "question_text": "What does REST stand for in REST API?",
-                "options": ["Remote State Transfer", "Representational State Transfer", "Remote System Transfer", "Representational System Transfer"],
-                "correct_answer": "Representational State Transfer"
+                "id": 5,
+                "question_text": "Which is the largest ocean on Earth?",
+                "options": ["Atlantic", "Indian", "Arctic", "Pacific"],
+                "correct_answer": "Pacific"
             },
             {
-                "question_text": "Which HTTP method is idempotent?",
-                "options": ["POST", "GET", "PATCH", "DELETE"],
-                "correct_answer": "GET"
+                "id": 6,
+                "question_text": "In which year did World War II end?",
+                "options": ["1943", "1944", "1945", "1946"],
+                "correct_answer": "1945"
             },
             {
-                "question_text": "What is the time complexity of binary search?",
-                "options": ["O(n)", "O(n²)", "O(log n)", "O(1)"],
-                "correct_answer": "O(log n)"
+                "id": 7,
+                "question_text": "What is the fastest land animal?",
+                "options": ["Lion", "Cheetah", "Tiger", "Leopard"],
+                "correct_answer": "Cheetah"
             },
             {
-                "question_text": "Which of these is not a principle of OOP?",
-                "options": ["Inheritance", "Encapsulation", "Sequencing", "Polymorphism"],
-                "correct_answer": "Sequencing"
+                "id": 8,
+                "question_text": "Which planet is known as the Red Planet?",
+                "options": ["Venus", "Mars", "Mercury", "Jupiter"],
+                "correct_answer": "Mars"
             },
             {
-                "question_text": "What does Django use for its database ORM?",
-                "options": ["Models", "Views", "Templates", "Forms"],
-                "correct_answer": "Models"
+                "id": 9,
+                "question_text": "Who painted the Mona Lisa?",
+                "options": ["Van Gogh", "Da Vinci", "Picasso", "Michelangelo"],
+                "correct_answer": "Da Vinci"
             },
             {
-                "question_text": "Which of these is not a valid HTTP status code?",
-                "options": ["200", "404", "600", "500"],
-                "correct_answer": "600"
+                "id": 10,
+                "question_text": "What is the largest continent?",
+                "options": ["North America", "Europe", "Africa", "Asia"],
+                "correct_answer": "Asia"
             }
         ]
 
+        # Clear existing questions
+        Question.objects.all().delete()
+
         for question_data in questions_data:
             Question.objects.create(
+                id=question_data['id'],
                 question_text=question_data['question_text'],
                 options=question_data['options'],
                 correct_answer=question_data['correct_answer']
             )
         
-        self.stdout.write(self.style.SUCCESS('Successfully loaded initial questions'))
+        self.stdout.write(self.style.SUCCESS('Successfully loaded GK questions'))
