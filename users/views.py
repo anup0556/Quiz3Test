@@ -4,6 +4,12 @@ from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from .models import UserProfile
 from .serializers import UserProfileSerializer
+from rest_framework.pagination import PageNumberPagination
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 class UserRegistrationView(APIView):
     def get_user_credentials(self, email):

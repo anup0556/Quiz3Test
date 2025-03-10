@@ -11,6 +11,11 @@ class UserProfile(models.Model):
 
     class Meta:
         db_table = 'user_profile'
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['phone_number']),
+            models.Index(fields=['created_at'])
+        ]
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
