@@ -33,3 +33,7 @@ INSTALLED_APPS = [
     'leaderboard',
     'answers.apps.AnswersConfig',  # Make sure this exact line is used
 ]
+
+
+USE_TZ = True
+DATETIME_FORMAT = "Y-m-d\TH:i:s.u\Z"

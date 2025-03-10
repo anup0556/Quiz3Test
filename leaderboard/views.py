@@ -4,9 +4,11 @@ from .models import LeaderBoard
 from answers.models import Answer
 from questions.models import Question
 from django.db.models import Count, F
+from django.utils.timezone import now
 
 class LeaderboardView(APIView):
     def get(self, request):
+        current_time = now()  # This will include nanoseconds
         total_questions = Question.objects.count()
         
         # Get all users sorted by total points from correct answers
